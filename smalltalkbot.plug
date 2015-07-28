@@ -1,0 +1,9 @@
+[Python]
+Version=3
+
+[Core]
+Name = smalltalkbot
+Module = smalltalkbot
+
+[Documentation]
+Description = Tool to smalltalk with your teammates
