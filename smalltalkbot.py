@@ -147,8 +147,8 @@ class SmalltalkBot(BotPlugin):
 
     @botcmd
     def user_del(self, mess, args):
-        """ Lists all available users
-        Example: !user list
+        """ Delete location for a user
+        Example: !user del tomas
         """
         user = args.strip().title()
         users = self['users']
