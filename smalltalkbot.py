@@ -60,18 +60,18 @@ class SmalltalkBot(BotPlugin):
             yield "You need a user AND a location"
             return "Example: !location setother Tomas Jaipur"
 
-        requester = mess.frm.node
+        requester = str(mess.frm)
         user = args[0].strip().title()
         user_location = " ".join(args[1:]).title()
-        users = self.shelf['users']
+        users = self['users']
 
-        if user in self.shelf['nicknames']:
-            user = self.shelf['nicknames'][user]
+        if user in self['nicknames']:
+            user = self['nicknames'][user]
 
         yield "Ok, " + requester + ", trying to set "+ user + " location to " + user_location
         try:
             users[user] = user_location
-            self.shelf['users'] = users
+            self['users'] = users
         except Exception:
             raise "I can't update that user"
         return "Done!"
@@ -84,16 +84,16 @@ class SmalltalkBot(BotPlugin):
         """
 
         requester = str(mess.frm.resource).title()
-        users = self.shelf['users']
+        users = self['users']
         user_location = args.strip().title()
-        if requester in self.shelf['nicknames']:
-            requester = self.shelf['nicknames'][requester]
+        if requester in self['nicknames']:
+            requester = self['nicknames'][requester]
 
         yield "Ok, " + requester + ", trying to set your location to " + user_location
 
         try:
             users[requester]=user_location
-            self.shelf['users'] = users
+            self['users'] = users
         except KeyError:
             raise "I can't update that user"
         return "Done!"
@@ -105,12 +105,12 @@ class SmalltalkBot(BotPlugin):
         Example: !location get Tomas"
         """
         user = args.strip().title()
-        if user in self.shelf['users']:
-            return "Location for user " + user + " is " + self.shelf['users'][user]
+        if user in self['users']:
+            return "Location for user " + user + " is " + self['users'][user]
         else:
-            if user in self.shelf['nicknames']:
-                username = self.shelf['nicknames'][user]
-                return "User " + user + " is a nickname for " + username + ". Location for user " + username + " is " + self.shelf['users'][username]
+            if user in self['nicknames']:
+                username = self['nicknames'][user]
+                return "User " + user + " is a nickname for " + username + ". Location for user " + username + " is " + self['users'][username]
             else:
                 return "I have no record for user " + user
 
@@ -120,16 +120,16 @@ class SmalltalkBot(BotPlugin):
         Example: !smalltalk Tomas
         """
         user = args.strip().title()
-        if user in self.shelf['users']:
+        if user in self['users']:
             pass
         else:
-            if user in self.shelf['nicknames']:
-                user = self.shelf['nicknames'][user]
+            if user in self['nicknames']:
+                user = self['nicknames'][user]
             else:
                 return "I have no record for user " + user
 
         try:
-            user_location = self.shelf['users'][user]
+            user_location = self['users'][user]
 
             yield "Location for user " + user + " is " + user_location
             maps_search = requests.get('http://maps.googleapis.com/maps/api/geocode/json?address=' + user_location + '&sensor=false')
@@ -151,10 +151,10 @@ class SmalltalkBot(BotPlugin):
         Example: !user list
         """
         user = args.strip().title()
-        users = self.shelf['users']
+        users = self['users']
         try:
             del users[user]
-            self.shelf['users'] = users
+            self['users'] = users
             return "User "+ user + " deleted successfully"
         except KeyError:
             raise "There's no user " + user +" in the database"
@@ -173,8 +173,8 @@ class SmalltalkBot(BotPlugin):
         if len(args) <= 1:
             yield "You need a user AND a nickname"
             return "Example: !nick add nunez Tomas"
-        nicknames = self.shelf['nicknames']
-        users = self.shelf['users']
+        nicknames = self['nicknames']
+        users = self['users']
         user = args[0].strip().title()
         nickname = " ".join(args[1:]).strip().title()
 
@@ -189,7 +189,7 @@ class SmalltalkBot(BotPlugin):
         if nickname in nicknames:
             yield "Warning: Nickname " + nickname + " was already there with value " + nicknames[nickname] + ". Overwriting..."
         nicknames[nickname] = user
-        self.shelf['nicknames'] = nicknames
+        self['nicknames'] = nicknames
 
     @botcmd
     def nick_list(self, mess, args):
@@ -204,16 +204,16 @@ class SmalltalkBot(BotPlugin):
         Example: !nick del nickname
         """
         nick = args.strip().title()
-        nicknames = self.shelf['nicknames']
+        nicknames = self['nicknames']
         try:
             del nicknames[nick]
-            self.shelf['nicknames'] = nicknames
+            self['nicknames'] = nicknames
             return "Nickname " + nick + " deleted successfully"
         except KeyError:
             raise "There's no nickname " + nick + " in the database"
 
 
-    @botcmd
-    def user_init(self, mess, args):
-        self['users'] = {}
-        self['nicknames'] = {}
+#    @botcmd
+#    def user_init(self, mess, args):
+#        self['users'] = {}
+#        self['nicknames'] = {}
