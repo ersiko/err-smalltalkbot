@@ -1,5 +1,5 @@
 SmalltalkBot
-==========
+============
 
 This SmalltalkBot provides some tools smalltalk
 

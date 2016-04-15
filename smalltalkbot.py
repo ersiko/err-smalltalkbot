@@ -29,10 +29,15 @@ class SmalltalkBot(BotPlugin):
         if not args:
             return 'Which city do you want to check?'
         args = args.strip()
-        if str(args) == "Uranus":
+        cityToCheck = str(args)
+        if cityToCheck == "Uranus":
             return "Mine is warm...What about yours?"
-        r = requests.get('http://api.openweathermap.org/data/2.5/weather?q=' + str(args) + '&APPID='+ OpenWeatherMapAPIToken +'&units=Metric')
-        return 'The closest city I have data is ' + r.json()['name'] + ' and according to openweathermap weather is: ' + r.json()['weather'][0]['description'] + ' and temperature is ' + str(r.json()['main']['temp']) + ' Celsius'
+        r = requests.get('http://api.openweathermap.org/data/2.5/weather?q=' + cityToCheck + '&APPID='+ OpenWeatherMapAPIToken +'&units=Metric')
+        cityFound = r.json()['name']
+        messagePrefix = ""
+        if( cityToCheck != cityFound ):
+            messagePrefix = "The closest city I have data for is " + cityFound + ". "
+        return messagePrefix + 'According to openweathermap, the weather in ' + cityFound + ' is: ' + r.json()['weather'][0]['description'] + ' and temperature is ' + str(r.json()['main']['temp']) + ' Celsius'
 
     @botcmd
     def time(self, mess, args):
