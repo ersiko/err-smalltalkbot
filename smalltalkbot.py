@@ -7,7 +7,7 @@ else:
     from errbot.botplugin import BotPlugin
     from errbot.jabberbot import botcmd
 
-from myconfig import OpenWeatherMapAPIToken
+from myconfig import OpenWeatherMapAPIToken, forecastioAPIKey
 import urllib
 from pyquery import PyQuery as pq
 import datetime
@@ -145,6 +145,8 @@ class SmalltalkBot(BotPlugin):
             yield maps_search.json()['results'][0]['formatted_address'] + " is in " + city_tz.json()['timeZoneName'] + " timezone, and now it's " + datetime.datetime.now(timezone(city_tz.json()['timeZoneId'])).strftime(fmt) + " there."
             openweathermap = requests.get('http://api.openweathermap.org/data/2.5/weather?q=' + user_location + '&APPID='+ OpenWeatherMapAPIToken +'&units=Metric')
             yield 'The closest city I have data is ' + openweathermap.json()['name'] + ' and according to openweathermap, weather is: ' + openweathermap.json()['weather'][0]['description'] + ' and temperature is ' + str(openweathermap.json()['main']['temp']) + ' Celsius'
+            forecastio = requests.get('https://api.forecast.io/forecast/' + forecastioAPIKey +'/' + str(location_latitude) + ',' + str(location_longitude) + '?units=si')
+            yield 'According to forecast.io, it\'s ' + forecastio.json()['currently']['summary'] + ' and temperature is ' + str(forecastio.json()['currently']['temperature']) + ' Celsius'
 #            return "Done!"
 
         except KeyError:
